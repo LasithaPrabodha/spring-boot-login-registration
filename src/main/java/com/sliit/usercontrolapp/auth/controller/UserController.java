@@ -6,6 +6,9 @@ import com.sliit.usercontrolapp.auth.service.UserService;
 import com.sliit.usercontrolapp.auth.validator.UserValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +30,46 @@ public class UserController {
 		model.addAttribute("userForm", new User());
 
 		return "registration";
+	}
+
+	@GetMapping("/edit-profile")
+	public String editProfile(Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User currentUser = userService.findByUsername(username);
+			model.addAttribute("userForm", currentUser);
+		} else {
+			model.addAttribute("userForm", new User());
+		}
+
+		return "edit-profile";
+	}
+
+	@PutMapping("/edit-profile")
+	public String saveProfile(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+		userValidator.validate(userForm, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			return "edit-profile";
+		}
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = userService.findByUsername(username);
+
+			user.setEmail(userForm.getEmail());
+			user.setFirstName(userForm.getFirstName());
+			user.setLastName(userForm.getLastName());
+
+			userService.save(user);
+		}
+
+		return "redirect:/welcome";
+
 	}
 
 	@PostMapping("/registration")

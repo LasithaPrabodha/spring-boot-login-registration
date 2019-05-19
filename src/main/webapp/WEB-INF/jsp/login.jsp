@@ -1,4 +1,4 @@
-<%@page isELIgnored="false"%>
+<%@ page isELIgnored="false"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -7,16 +7,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Log in with your account</title>
 
-<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css"
-	rel="stylesheet" type="text/css" />
-
-<link href="${contextPath}/css/common.css" rel="stylesheet"
-	type="text/css" />
-</head>
+<jsp:include page="template/head.jsp">
+	<jsp:param name="title" value="Login" />
+	<jsp:param name="contextPath" value="${contextPath}" />
+</jsp:include>
 
 <body>
 

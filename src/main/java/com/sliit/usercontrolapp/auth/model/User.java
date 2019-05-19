@@ -1,6 +1,7 @@
 package com.sliit.usercontrolapp.auth.model;
 
 import javax.persistence.*;
+
 import java.util.Set;
 
 @Entity
@@ -10,14 +11,25 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+    @Column(nullable = false, unique = true, length = 32)
 	private String username;
 
+    @Column(nullable = false, length = 50)
+	private String firstName;
+
+    @Column(length = 50)
+	private String lastName;
+    
+    @Column(nullable = false, length = 120, unique = true)
+    private String email;
+    
+    @Column(nullable = false)
 	private String password;
 
 	@Transient
 	private String passwordConfirm;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.REMOVE)
 	private Set<Role> roles;
 
 	public Long getId() {
@@ -58,5 +70,29 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
